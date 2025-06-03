@@ -1,5 +1,6 @@
 function [ data, wavelengths, params ] = loadSPE( filename )
 %% LOADSPE load LightField SPE v3.0 or WinSpec SPE v2.x data from a file
+% Edin O. : Obtained from https://github.com/maxsich/loadSPE, modified code accordingly to work with the file structure I found
 % [data, wavelengths, params] = loadSPE( filename )
 
 %% *data*
@@ -189,22 +190,22 @@ if params.version >= 3
     
     % export wavelengths data to a separate parameter
     if isfield(params.SpeFormat.Calibrations, 'WavelengthMapping')
-        w = str2num(params.SpeFormat.Calibrations.WavelengthMapping.Wavelength.Text);
-        if nROI == 1
-            % if there is only one ROI then wavelengths should be a single 1D
-            % array
-            x1 = str2num(params.SpeFormat.Calibrations.SensorMapping.Attributes.x) + 1;
-            x2 = x1 + str2num(params.SpeFormat.Calibrations.SensorMapping.Attributes.width) - 1;
-            wavelengths = w( x1:x2 );
-        else
-            % if there are several ROIs in the file then create cell array of
-            % 1D arrays
-            for i = 1 : nROI
-                x1 = str2num(params.SpeFormat.Calibrations.SensorMapping{1,i}.Attributes.x) + 1;
-                x2 = x1 + str2num(params.SpeFormat.Calibrations.SensorMapping{1,i}.Attributes.width) - 1;
-                wavelengths{i} = w( x1:x2 );
-            end
-        end
+        wavelengths = str2num(params.SpeFormat.Calibrations.WavelengthMapping.Wavelength.Text);
+        % if nROI == 1
+        %     % if there is only one ROI then wavelengths should be a single 1D
+        %     % array
+        %     x1 = str2num(params.SpeFormat.Calibrations.WavelengthMapping.Attributes.x) + 1;
+        %     x2 = x1 + str2num(params.SpeFormat.Calibrations.WavelengthMapping.Attributes.width) - 1;
+        %     wavelengths = w( x1:x2 );
+        % else
+        %     % if there are several ROIs in the file then create cell array of
+        %     % 1D arrays
+        %     for i = 1 : nROI
+        %         x1 = str2num(params.SpeFormat.Calibrations.SensorMapping{1,i}.Attributes.x) + 1;
+        %         x2 = x1 + str2num(params.SpeFormat.Calibrations.SensorMapping{1,i}.Attributes.width) - 1;
+        %         wavelengths{i} = w( x1:x2 );
+        %     end
+        % end
     else
         wavelengths = [];
     end
